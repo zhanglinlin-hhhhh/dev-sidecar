@@ -1,5 +1,6 @@
 streamlit-agraph
 Pillow
 streamlit
-matplotlib 
-networkx Pillow
+matplotlib
+networkx
+
