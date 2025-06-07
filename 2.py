@@ -1,5 +1,8 @@
 import streamlit as st
 from streamlit_agraph import agraph, Node, Edge, Config
+import base64
+from io import BytesIO
+
 
 st.title("Interactive Graph Customization")
 
@@ -21,13 +24,18 @@ json_data = {
     }
 }
 
+# 图像上传并转换为 Base64
+def image_to_base64(image_file):
+    img = BytesIO(image_file.read())
+    return base64.b64encode(img.getvalue()).decode()
+
 # 图像上传功能
 def image_upload_for_experts():
     images = {}
     for expert in json_data.keys():
         image = st.sidebar.file_uploader(f"上传 {expert} 的图像", type=["png", "jpg", "jpeg"], key=expert)
         if image is not None:
-            images[expert] = image
+            images[expert] = image_to_base64(image)
     return images
 
 # 转换 JSON 为图
@@ -40,8 +48,8 @@ def json2graph(json_data, topic, images):
     # 为每个专家节点添加图像
     for expert, value in json_data.items():
         if expert in images:  # 如果该专家有上传图像
-            img = images[expert]
-            nodes.append(Node(id=expert, label=expert, size=50, shape="image", image=img))
+            img_base64 = images[expert]
+            nodes.append(Node(id=expert, label=expert, size=50, shape="image", image=f"data:image/png;base64,{img_base64}"))
         else:  # 如果没有图像，则使用默认圆圈
             nodes.append(Node(id=expert, label=expert, size=50, shape="dot"))
         
