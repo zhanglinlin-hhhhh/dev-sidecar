@@ -3,5 +3,5 @@ Pillow
 streamlit
 matplotlib
 networkx
-upgrade streamlit
+
 
